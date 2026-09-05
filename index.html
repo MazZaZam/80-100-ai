@@ -1,0 +1,1094 @@
+<!doctype html>
+<html lang="en-IE">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; connect-src https://SUPABASE_REF.supabase.co; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://avatars.githubusercontent.com https://*.googleusercontent.com; object-src 'none'; base-uri 'none'; form-action 'self'; upgrade-insecure-requests">
+<meta name="referrer" content="no-referrer">
+<meta name="description" content="A daycare for projects. You get it 80% of the way. Lads who hate tinkering finish it. We take a cut of the whole thing.">
+<meta name="color-scheme" content="light dark">
+<title>80%/100%.ai - Finish a project you ADHD bastard</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='8' fill='%2315140F'/%3E%3Crect x='6' y='22' width='41' height='20' fill='%23F5C518'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Public+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  :root {
+    --bg: #FAFAF7;
+    --ink: #15140F;
+    --ink-2: #5E5B52;
+    --line: #D9D6CA;
+    --panel: #F1EFE6;
+    --yellow: #F5C518;
+    --yellow-ink: #15140F;
+    --done: #1F7A45;
+    --inv-bg: #15140F;
+    --inv-ink: #FAFAF7;
+    --inv-muted: #A39F93;
+    --display: "Archivo", "Helvetica Neue", Arial, sans-serif;
+    --body: "Public Sans", "Helvetica Neue", Arial, sans-serif;
+    --mono: "IBM Plex Mono", "SF Mono", Menlo, Consolas, monospace;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #15140F;
+      --ink: #F1EFE6;
+      --ink-2: #A8A498;
+      --line: #35332B;
+      --panel: #1E1D17;
+      --done: #4CC27C;
+      --inv-bg: #F1EFE6;
+      --inv-ink: #15140F;
+      --inv-muted: #5E5B52;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #15140F;
+    --ink: #F1EFE6;
+    --ink-2: #A8A498;
+    --line: #35332B;
+    --panel: #1E1D17;
+    --done: #4CC27C;
+    --inv-bg: #F1EFE6;
+    --inv-ink: #15140F;
+    --inv-muted: #5E5B52;
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--body);
+    font-size: 1.0625rem;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
+  a { color: inherit; }
+  a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-visible {
+    outline: 3px solid var(--yellow);
+    outline-offset: 3px;
+  }
+  h1, h2, h3, h4 { margin: 0; font-family: var(--display); text-wrap: balance; }
+  p { margin: 0; }
+  ul { margin: 0; padding: 0; list-style: none; }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 0 24px; }
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: .78rem;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+  }
+  .mono { font-family: var(--mono); }
+  .num { font-variant-numeric: tabular-nums; }
+
+  /* Buttons */
+  .btn {
+    display: inline-flex; align-items: center; gap: .5rem;
+    padding: .85rem 1.25rem;
+    font: 600 .95rem/1 var(--body);
+    border: 1.5px solid var(--ink);
+    background: var(--ink); color: var(--bg);
+    text-decoration: none; cursor: pointer; border-radius: 4px;
+    transition: transform .12s ease, background .12s ease;
+  }
+  .btn:hover { transform: translateY(-1px); }
+  .btn:active { transform: translateY(0); }
+  .btn.ghost { background: transparent; color: var(--ink); }
+  .btn.ghost:hover { background: var(--panel); }
+  .btn.yellow { background: var(--yellow); color: var(--yellow-ink); border-color: var(--yellow); }
+  .btn[disabled] { opacity: .55; cursor: not-allowed; transform: none; }
+
+  /* Nav */
+  .nav {
+    position: sticky; top: 0; z-index: 20;
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav .wrap { display: flex; align-items: center; justify-content: space-between; gap: 1rem; height: 64px; }
+  .wordmark {
+    font-family: var(--display); font-weight: 900; font-stretch: 112%;
+    font-size: 1.25rem; letter-spacing: -.01em; text-decoration: none; white-space: nowrap;
+  }
+  .wordmark b { color: var(--yellow); font-weight: 900; }
+  .nav ul { display: flex; gap: 1.6rem; align-items: center; }
+  .nav ul a { text-decoration: none; font-size: .95rem; font-weight: 500; color: var(--ink-2); }
+  .nav ul a:hover { color: var(--ink); }
+  @media (max-width: 760px) { .nav ul li:not(.cta) { display: none; } }
+
+  /* Hero */
+  .hero { padding: 88px 0 56px; }
+  .hero .eyebrow { margin-bottom: 1.6rem; display: flex; gap: 1rem; flex-wrap: wrap; }
+  .hero h1 {
+    font-size: clamp(2.9rem, 8.4vw, 7rem);
+    font-weight: 900; font-stretch: 112%;
+    line-height: .92; letter-spacing: -.025em;
+    max-width: 14ch;
+  }
+  .hero h1 em { font-style: normal; color: var(--yellow); }
+  .hero .sub {
+    margin-top: 2rem; max-width: 62ch;
+    font-size: clamp(1.15rem, 2vw, 1.4rem); line-height: 1.4; font-weight: 500;
+  }
+  .hero .lede { margin-top: 1rem; max-width: 60ch; color: var(--ink-2); }
+  .hero .actions { display: flex; gap: .75rem; flex-wrap: wrap; margin-top: 2.2rem; }
+
+  /* Fig 1 - the 80% wall */
+  .fig { margin: 72px 0 0; }
+  .fig figcaption { margin-top: 1rem; font-family: var(--mono); font-size: .8rem; color: var(--ink-2); }
+  .fig figcaption b { color: var(--ink); font-weight: 500; }
+  .wall {
+    position: relative; height: 96px;
+    border: 1.5px solid var(--ink); border-radius: 6px; overflow: hidden;
+    background: var(--panel);
+  }
+  .wall-fill {
+    position: absolute; inset: 0 auto 0 0; width: 80%;
+    background: var(--ink);
+    transition: width .9s cubic-bezier(.2,.8,.2,1);
+  }
+  .wall-fill.done { background: var(--done); }
+  .wall-lads {
+    position: absolute; inset: 0 0 0 80%;
+    background: repeating-linear-gradient(135deg, var(--yellow) 0 12px, var(--ink) 12px 24px);
+    display: grid; place-items: center;
+    transition: opacity .6s ease;
+  }
+  .wall-lads span {
+    background: var(--bg); color: var(--ink);
+    font-family: var(--mono); font-size: .72rem; letter-spacing: .12em;
+    padding: .3rem .5rem; border-radius: 3px;
+  }
+  .wall-lads.gone { opacity: 0; }
+  .wall-pct {
+    position: absolute; left: 1rem; top: 50%; transform: translateY(-50%);
+    color: var(--bg); font-family: var(--display); font-weight: 900; font-stretch: 112%;
+    font-size: 2.4rem; letter-spacing: -.03em; mix-blend-mode: normal;
+  }
+  .wall-you {
+    position: absolute; left: calc(80% - 1px); top: 0; bottom: 0; width: 2px; background: var(--yellow);
+  }
+  .wall-you::after {
+    content: "YOU STOP HERE";
+    position: absolute; top: 6px; right: 8px;
+    font-family: var(--mono); font-size: .62rem; letter-spacing: .1em; color: var(--yellow); white-space: nowrap;
+  }
+  .wall-controls {
+    display: grid; grid-template-columns: 1fr auto; gap: 1rem 2rem; align-items: end; margin-top: 1.25rem;
+  }
+  @media (max-width: 700px) { .wall-controls { grid-template-columns: 1fr; } }
+  .wall-controls label { display: block; font-weight: 600; font-size: .95rem; }
+  .wall-controls label output { font-family: var(--mono); font-weight: 500; margin-left: .5rem; }
+  .wall-controls input[type="range"] { width: 100%; accent-color: var(--yellow); margin-top: .5rem; }
+  .wall-msg { min-height: 1.5em; font-family: var(--mono); font-size: .82rem; color: var(--ink-2); margin-top: .35rem; }
+  .wall-msg.warn { color: var(--ink); font-weight: 500; }
+
+  /* Hazard tape ticker */
+  .tape {
+    margin-top: 64px;
+    background: var(--yellow); color: var(--yellow-ink);
+    border-top: 3px solid var(--ink); border-bottom: 3px solid var(--ink);
+    overflow: hidden; white-space: nowrap;
+  }
+  .tape-track {
+    display: inline-block;
+    font-family: var(--display); font-weight: 900; font-stretch: 112%;
+    font-size: 1.15rem; letter-spacing: .04em; text-transform: uppercase;
+    padding: .55rem 0;
+    animation: tape 28s linear infinite;
+  }
+  .tape-track span { padding: 0 1.2rem; }
+  @keyframes tape { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+  /* Stats band */
+  .stats { background: var(--inv-bg); color: var(--inv-ink); padding: 56px 0; }
+  .stats-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 2rem; }
+  @media (max-width: 960px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 520px) { .stats-grid { grid-template-columns: 1fr; } }
+  .stat .n {
+    font-family: var(--display); font-weight: 900; font-stretch: 112%;
+    font-size: clamp(2.2rem, 4vw, 3.4rem); letter-spacing: -.03em; line-height: 1; color: var(--yellow);
+  }
+  .stat .l { margin-top: .5rem; font-family: var(--mono); font-size: .76rem; letter-spacing: .08em; text-transform: uppercase; color: var(--inv-muted); }
+
+  /* Sections */
+  section.block { padding: 104px 0; border-top: 1px solid var(--line); }
+  .head { display: grid; grid-template-columns: 1fr 1.2fr; gap: 3rem; align-items: start; margin-bottom: 3.5rem; }
+  @media (max-width: 860px) { .head { grid-template-columns: 1fr; gap: 1.2rem; } }
+  .head h2 {
+    font-size: clamp(2rem, 4.2vw, 3.3rem); font-weight: 800; font-stretch: 104%;
+    letter-spacing: -.025em; line-height: 1.02;
+  }
+  .head .eyebrow { margin-bottom: 1rem; }
+  .head .txt { color: var(--ink-2); font-size: 1.1rem; max-width: 56ch; padding-top: .4rem; }
+  .head .txt strong { color: var(--ink); font-weight: 600; }
+
+  /* Fig 2 - isolated systems */
+  .isolated { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
+  @media (max-width: 860px) { .isolated { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 520px) { .isolated { grid-template-columns: 1fr; } }
+  .iso { background: var(--bg); padding: 1.4rem 1.4rem 1.3rem; display: flex; flex-direction: column; gap: .9rem; min-height: 150px; }
+  .iso .t { font-family: var(--display); font-weight: 700; font-size: 1.1rem; letter-spacing: -.01em; }
+  .iso .s { font-size: .9rem; color: var(--ink-2); }
+  .iso .p { height: 8px; background: var(--panel); border-radius: 99px; overflow: hidden; position: relative; margin-top: auto; }
+  .iso .p i { display: block; height: 100%; background: var(--ink); }
+  .iso .p::after { content: ""; position: absolute; left: 80%; top: -3px; bottom: -3px; width: 2px; background: var(--yellow); }
+  .iso .pv { font-family: var(--mono); font-size: .74rem; color: var(--ink-2); display: flex; justify-content: space-between; }
+  .iso.vacant { background: repeating-linear-gradient(135deg, var(--panel) 0 8px, var(--bg) 8px 16px); justify-content: center; align-items: center; text-align: center; }
+  .iso.vacant .t { color: var(--ink-2); }
+
+  /* How it works - it IS a sequence */
+  .steps { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1.5rem; }
+  @media (max-width: 1000px) { .steps { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 520px) { .steps { grid-template-columns: 1fr; } }
+  .step { border-top: 2px solid var(--ink); padding-top: 1rem; }
+  .step .k { font-family: var(--mono); font-size: .76rem; letter-spacing: .1em; color: var(--ink-2); }
+  .step h3 { margin-top: .6rem; font-size: 1.2rem; font-weight: 700; letter-spacing: -.01em; }
+  .step p { margin-top: .5rem; font-size: .95rem; color: var(--ink-2); }
+  .step .hrs { margin-top: .8rem; font-family: var(--mono); font-size: .74rem; color: var(--ink); }
+
+  /* The lads */
+  .lads { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; }
+  @media (max-width: 1000px) { .lads { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 520px) { .lads { grid-template-columns: 1fr; } }
+  .lad { border: 1px solid var(--line); border-radius: 6px; overflow: hidden; background: var(--bg); }
+  .lad .face {
+    aspect-ratio: 1 / 1; display: grid; place-items: center;
+    background: var(--panel); position: relative;
+  }
+  .lad .face canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .lad .face span {
+    position: relative; font-family: var(--display); font-weight: 900; font-stretch: 112%;
+    font-size: 3.4rem; letter-spacing: -.04em; color: var(--ink);
+    background: var(--yellow); padding: .1em .3em; border-radius: 4px;
+  }
+  .lad .body { padding: 1.1rem 1.2rem 1.3rem; }
+  .lad h3 { font-size: 1.2rem; font-weight: 700; letter-spacing: -.01em; }
+  .lad .role { font-family: var(--mono); font-size: .74rem; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-2); margin-top: .3rem; }
+  .lad p { margin-top: .8rem; font-size: .93rem; color: var(--ink-2); }
+  .lad .tag { margin-top: .9rem; display: inline-block; font-family: var(--mono); font-size: .72rem; padding: .25rem .5rem; border: 1px solid var(--line); border-radius: 3px; }
+
+  /* Drop-off form */
+  .dropoff { display: grid; grid-template-columns: 1.1fr 1fr; gap: 3rem; align-items: start; }
+  @media (max-width: 900px) { .dropoff { grid-template-columns: 1fr; } }
+  .form { display: grid; gap: 1.25rem; }
+  .field label { display: block; font-weight: 600; font-size: .92rem; margin-bottom: .4rem; }
+  .field label small { font-weight: 400; color: var(--ink-2); }
+  .field input[type="text"], .field select, .field input[type="number"] {
+    width: 100%; padding: .75rem .85rem;
+    font: 500 1rem var(--body); color: var(--ink);
+    background: var(--bg); border: 1.5px solid var(--line); border-radius: 4px;
+  }
+  .field input:hover, .field select:hover { border-color: var(--ink-2); }
+  .field input[type="range"] { width: 100%; accent-color: var(--yellow); }
+  .field .hint { font-family: var(--mono); font-size: .76rem; color: var(--ink-2); margin-top: .35rem; min-height: 1.3em; }
+  .field .hint.warn { color: var(--ink); font-weight: 500; }
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  @media (max-width: 560px) { .two { grid-template-columns: 1fr; } }
+  .consent { display: flex; gap: .7rem; align-items: flex-start; font-size: .92rem; color: var(--ink-2); }
+  .consent input { margin-top: .3rem; accent-color: var(--ink); }
+  .consent button { background: none; border: 0; padding: 0; color: var(--ink); text-decoration: underline; cursor: pointer; font: inherit; }
+
+  .receipt-wrap { position: sticky; top: 88px; }
+  .receipt {
+    background: var(--inv-bg); color: var(--inv-ink);
+    padding: 1.6rem 1.5rem 1.3rem; border-radius: 6px 6px 0 0;
+    font-family: var(--mono); font-size: .86rem; line-height: 1.6;
+    position: relative;
+  }
+  .receipt::after {
+    content: ""; display: block; position: absolute; left: 0; right: 0; bottom: -10px; height: 10px;
+    background: radial-gradient(circle at 10px 0, transparent 7px, var(--inv-bg) 7.5px) 0 0 / 20px 10px repeat-x;
+  }
+  .receipt .rt { font-family: var(--display); font-weight: 900; font-stretch: 112%; font-size: 1.3rem; letter-spacing: -.01em; }
+  .receipt .rs { color: var(--inv-muted); margin-bottom: 1rem; font-size: .76rem; letter-spacing: .08em; text-transform: uppercase; }
+  .receipt dl { display: grid; grid-template-columns: auto 1fr; gap: .3rem 1.2rem; margin: 0; border-top: 1px dashed var(--inv-muted); border-bottom: 1px dashed var(--inv-muted); padding: .9rem 0; }
+  .receipt dt { color: var(--inv-muted); }
+  .receipt dd { margin: 0; text-align: right; }
+  .receipt .stamp {
+    margin-top: 1.1rem; display: inline-block; transform: rotate(-3deg);
+    border: 2.5px solid var(--yellow); color: var(--yellow); padding: .3rem .6rem;
+    font-family: var(--display); font-weight: 900; font-stretch: 112%; letter-spacing: .04em; font-size: .9rem;
+  }
+  .receipt .foot { margin-top: 1.2rem; color: var(--inv-muted); font-size: .74rem; }
+  .receipt-note { margin-top: 1.3rem; font-family: var(--mono); font-size: .76rem; color: var(--ink-2); }
+
+  /* Pricing */
+  .tiers { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
+  @media (max-width: 900px) { .tiers { grid-template-columns: 1fr; } }
+  .tier { padding: 2rem 1.8rem 2.2rem; border-right: 1px solid var(--line); display: flex; flex-direction: column; gap: 1.1rem; position: relative; }
+  .tier:last-child { border-right: 0; }
+  @media (max-width: 900px) { .tier { border-right: 0; border-bottom: 1px solid var(--line); } .tier:last-child { border-bottom: 0; } }
+  .tier.pop { background: var(--panel); }
+  .tier .badge { position: absolute; top: 1rem; right: 1rem; font-family: var(--mono); font-size: .68rem; letter-spacing: .08em; text-transform: uppercase; background: var(--yellow); color: var(--yellow-ink); padding: .25rem .5rem; border-radius: 3px; }
+  .tier h3 { font-size: 1.15rem; font-weight: 700; }
+  .tier .cut { font-family: var(--display); font-weight: 900; font-stretch: 112%; font-size: 3.2rem; letter-spacing: -.04em; line-height: 1; }
+  .tier .cut small { display: block; font-family: var(--mono); font-weight: 400; font-size: .76rem; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-2); margin-top: .4rem; }
+  .tier .who { color: var(--ink-2); font-size: .95rem; }
+  .tier ul { display: grid; gap: .55rem; font-size: .93rem; padding-top: 1rem; border-top: 1px solid var(--line); }
+  .tier ul li { padding-left: 1.3rem; position: relative; }
+  .tier ul li::before { content: "✓"; position: absolute; left: 0; font-family: var(--mono); color: var(--done); }
+  .tier ul li.x::before { content: "✕"; color: var(--ink-2); }
+  .tier .btn { margin-top: auto; justify-content: center; }
+
+  /* Testimonials */
+  .quotes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+  @media (max-width: 900px) { .quotes { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 560px) { .quotes { grid-template-columns: 1fr; } }
+  .quote { border-top: 2px solid var(--ink); padding-top: 1rem; display: flex; flex-direction: column; gap: 1rem; }
+  .quote p { font-size: 1.05rem; line-height: 1.45; font-weight: 500; }
+  .quote .who { margin-top: auto; font-family: var(--mono); font-size: .76rem; color: var(--ink-2); }
+  .quote .who b { color: var(--ink); font-weight: 500; }
+
+  /* FAQ */
+  .faq { max-width: 760px; }
+  .faq details { border-top: 1px solid var(--line); }
+  .faq details:last-child { border-bottom: 1px solid var(--line); }
+  .faq summary { cursor: pointer; padding: 1.1rem 0; font-family: var(--display); font-weight: 700; font-size: 1.15rem; letter-spacing: -.01em; list-style: none; display: flex; justify-content: space-between; gap: 1rem; }
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq summary::after { content: "+"; font-family: var(--mono); color: var(--ink-2); font-weight: 400; }
+  .faq details[open] summary::after { content: "−"; }
+  .faq .a { padding: 0 0 1.2rem; color: var(--ink-2); max-width: 60ch; }
+  .faq .a b { color: var(--ink); font-weight: 600; }
+
+  /* Writing */
+  .posts { display: grid; gap: 0; border-top: 1px solid var(--line); }
+  .post { display: grid; grid-template-columns: 120px 1fr auto; gap: 1.5rem; align-items: baseline; padding: 1.3rem 0; border-bottom: 1px solid var(--line); text-decoration: none; }
+  @media (max-width: 700px) { .post { grid-template-columns: 1fr; gap: .4rem; } }
+  .post:hover h3 { text-decoration: underline; text-decoration-color: var(--yellow); text-decoration-thickness: 3px; }
+  .post .d { font-family: var(--mono); font-size: .76rem; color: var(--ink-2); }
+  .post h3 { font-size: 1.25rem; font-weight: 700; letter-spacing: -.01em; }
+  .post p { margin-top: .3rem; color: var(--ink-2); font-size: .95rem; max-width: 60ch; }
+  .post .r { font-family: var(--mono); font-size: .76rem; color: var(--ink-2); white-space: nowrap; }
+
+  /* Closing */
+  .closing { padding: 120px 0; border-top: 1px solid var(--line); text-align: left; }
+  .closing h2 { font-size: clamp(2.4rem, 6.5vw, 5.4rem); font-weight: 900; font-stretch: 112%; letter-spacing: -.03em; line-height: .95; max-width: 16ch; }
+  .closing h2 em { font-style: normal; color: var(--yellow); }
+  .closing p { margin-top: 1.5rem; color: var(--ink-2); max-width: 52ch; font-size: 1.1rem; }
+  .closing .actions { margin-top: 2rem; display: flex; gap: .75rem; flex-wrap: wrap; }
+
+  /* Footer */
+  footer { border-top: 1px solid var(--line); padding: 48px 0 40px; }
+  .fgrid { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap: 2rem; }
+  @media (max-width: 800px) { .fgrid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 480px) { .fgrid { grid-template-columns: 1fr; } }
+  footer .col h4 { font-family: var(--mono); font-weight: 500; font-size: .74rem; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-2); margin-bottom: .8rem; }
+  footer .col ul { display: grid; gap: .45rem; font-size: .92rem; }
+  footer .col a { text-decoration: none; color: var(--ink); }
+  footer .col a:hover { text-decoration: underline; }
+  footer .legal { margin-top: 2.5rem; padding-top: 1.2rem; border-top: 1px solid var(--line); display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; font-family: var(--mono); font-size: .74rem; color: var(--ink-2); }
+  footer .about { color: var(--ink-2); font-size: .92rem; max-width: 40ch; margin-top: .8rem; }
+
+  /* Waiver dialog */
+  dialog {
+    border: 1.5px solid var(--ink); border-radius: 6px; padding: 0;
+    background: var(--bg); color: var(--ink); max-width: 560px; width: calc(100% - 2rem);
+  }
+  dialog::backdrop { background: rgba(21,20,15,.55); }
+  .waiver { padding: 1.8rem; }
+  .waiver .eyebrow { margin-bottom: .5rem; }
+  .waiver h3 { font-size: 1.6rem; font-weight: 800; letter-spacing: -.02em; }
+  .waiver ol { margin: 1.2rem 0 0; padding-left: 1.3rem; display: grid; gap: .6rem; font-size: .95rem; }
+  .waiver ol li::marker { font-family: var(--mono); color: var(--ink-2); }
+  .waiver .sig { margin-top: 1.4rem; padding-top: 1rem; border-top: 1px dashed var(--line); font-family: var(--mono); font-size: .78rem; color: var(--ink-2); }
+  .waiver .row { margin-top: 1.4rem; display: flex; gap: .6rem; justify-content: flex-end; }
+
+  .toast {
+    position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%);
+    background: var(--inv-bg); color: var(--inv-ink); padding: .8rem 1.1rem; border-radius: 4px;
+    font-family: var(--mono); font-size: .82rem; z-index: 30; box-shadow: 0 8px 30px rgba(0,0,0,.25);
+  }
+
+  /* ---- app views ---- */
+  .view .wrap { min-height: 50vh; }
+  .nav ul a.active { color: var(--ink); text-decoration: underline; text-decoration-color: var(--yellow); text-decoration-thickness: 3px; text-underline-offset: 6px; }
+  .navme { display: inline-flex; align-items: center; gap: .5rem; text-decoration: none; font-family: var(--mono); font-size: .85rem; color: var(--ink) !important; }
+  .avatar { display: inline-grid; place-items: center; border-radius: 50%; background: var(--yellow); color: var(--yellow-ink); font-weight: 500; object-fit: cover; flex: none; }
+  img.avatar { background: var(--panel); }
+  .muted { color: var(--ink-2); }
+  .statsnote { margin-top: 1.4rem; font-size: .74rem; color: var(--inv-muted); }
+  .row { display: flex; gap: .6rem; align-items: center; flex-wrap: wrap; }
+  .btn.small { padding: .55rem .85rem; font-size: .85rem; }
+  .btn.on { background: var(--panel); }
+  .empty { font-family: var(--mono); font-size: .86rem; color: var(--ink-2); border: 1px dashed var(--line); border-radius: 6px; padding: 1.4rem; max-width: 60ch; }
+  .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
+  @media (max-width: 1000px) { .cards { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 600px) { .cards { grid-template-columns: 1fr; } }
+  .pcard { border: 1px solid var(--line); border-radius: 6px; padding: 1.1rem 1.2rem 1.2rem; display: flex; flex-direction: column; gap: .7rem; background: var(--bg); }
+  .pcard.status-finished { border-color: var(--done); }
+  .pcard.status-reclaimed { opacity: .7; }
+  .phead { display: flex; justify-content: space-between; gap: .8rem; align-items: center; font-size: .82rem; }
+  .who { display: inline-flex; align-items: center; gap: .45rem; text-decoration: none; color: var(--ink); }
+  .who .avatar { width: 22px; height: 22px; font-size: 9px; }
+  .pcard h3 { font-size: 1.25rem; font-weight: 700; letter-spacing: -.01em; overflow-wrap: anywhere; }
+  .pdistr { font-size: .92rem; overflow-wrap: anywhere; }
+  .pbar { height: 8px; background: var(--panel); border-radius: 99px; overflow: hidden; position: relative; }
+  .pbar i { display: block; height: 100%; background: var(--ink); }
+  .status-finished .pbar i { background: var(--done); }
+  .pbar::after { content: ""; position: absolute; left: 80%; top: -3px; bottom: -3px; width: 2px; background: var(--yellow); }
+  .pmeta { display: flex; justify-content: space-between; font-size: .74rem; color: var(--ink-2); }
+  .pchips { display: flex; gap: .4rem; flex-wrap: wrap; }
+  .chip { font-family: var(--mono); font-size: .68rem; letter-spacing: .08em; padding: .25rem .5rem; border-radius: 3px; border: 1px solid var(--ink); }
+  .chip.claimed { background: var(--yellow); color: var(--yellow-ink); border-color: var(--yellow); }
+  .chip.done { background: var(--done); color: #fff; border-color: var(--done); }
+  .chip.shame { border-style: dashed; color: var(--ink-2); }
+  .chip.nope { border-color: var(--line); color: var(--ink-2); }
+  .proof { font-size: .9rem; overflow-wrap: anywhere; }
+  .proof a { text-decoration-color: var(--yellow); text-decoration-thickness: 2px; }
+  .pactions { display: flex; gap: .5rem; flex-wrap: wrap; margin-top: auto; padding-top: .4rem; }
+  .finishform { display: grid; gap: .5rem; border-top: 1px dashed var(--line); padding-top: .8rem; }
+  .finishform label { font-size: .85rem; font-weight: 600; }
+  .finishform input { width: 100%; padding: .6rem .7rem; font: 500 .95rem var(--body); color: var(--ink); background: var(--bg); border: 1.5px solid var(--line); border-radius: 4px; }
+  .boards { display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem; }
+  @media (max-width: 960px) { .boards { grid-template-columns: 1fr; } }
+  .boardtitle { font-size: 1.4rem; font-weight: 800; letter-spacing: -.02em; margin-bottom: 1rem; }
+  .tablewrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 6px; }
+  table.board { width: 100%; border-collapse: collapse; font-size: .9rem; }
+  table.board th { text-align: left; font-family: var(--mono); font-weight: 500; font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-2); padding: .7rem .8rem; border-bottom: 1px solid var(--line); white-space: nowrap; }
+  table.board td { padding: .65rem .8rem; border-bottom: 1px solid var(--line); vertical-align: middle; }
+  table.board tr:last-child td { border-bottom: 0; }
+  table.board td.num { font-variant-numeric: tabular-nums; text-align: right; white-space: nowrap; }
+  table.board th:not(:nth-child(2)) { text-align: right; }
+  table.board tr.isme td { background: var(--panel); }
+  table.board .who b { font-weight: 600; }
+  .profile { display: grid; grid-template-columns: 1fr 1fr auto; gap: 1rem; align-items: end; margin-bottom: 3rem; max-width: 760px; }
+  @media (max-width: 700px) { .profile { grid-template-columns: 1fr; } }
+  .oauth { display: grid; gap: .6rem; margin-top: 1.2rem; }
+  .oauth .btn { justify-content: center; }
+  .magic { margin-top: 1.4rem; padding-top: 1.2rem; border-top: 1px dashed var(--line); display: grid; gap: .5rem; }
+  .magic input { flex: 1; min-width: 0; padding: .7rem .8rem; font: 500 1rem var(--body); color: var(--ink); background: var(--bg); border: 1.5px solid var(--line); border-radius: 4px; }
+</style>
+</head>
+<body>
+<header class="nav">
+  <div class="wrap">
+    <a class="wordmark" href="#top">80%<b>/</b>100%.ai</a>
+    <ul>
+      <li><a href="#/daycare" data-route="daycare">Daycare</a></li>
+      <li><a href="#/boards" data-route="boards">The Boards</a></li>
+      <li><a href="#how">How it works</a></li>
+      <li><a href="#lads">The Lads</a></li>
+      <li><a href="#cut">The Cut</a></li>
+      <li class="cta" id="navUser"><a class="btn" href="#dropoff">Drop off a project</a></li>
+    </ul>
+  </div>
+</header>
+
+<main id="top">
+<div data-view="home">
+  <section class="hero">
+    <div class="wrap">
+      <div class="eyebrow">
+        <span>A daycare for projects</span>
+        <span>·</span>
+        <span>Est. last Tuesday. Finished Wednesday.</span>
+      </div>
+      <h1>Finish a project<br>you <em>ADHD</em> bastard.</h1>
+      <p class="sub">Unfinished projects are on the horizon. Behind you. Thousands of them. We finish them.</p>
+      <p class="lede">You get it 80% of the way. You drop it off. A load of lads who mean business and hate tinkering take it to 100%. We take a cut of the whole thing.</p>
+      <div class="actions">
+        <a class="btn" href="#dropoff">Drop off a project</a>
+        <button class="btn ghost" type="button" data-open-waiver>Read the waiver</button>
+      </div>
+
+      <figure class="fig">
+        <div class="wall" role="img" aria-label="Progress bar filled to 80 percent. The final 20 percent is hazard-striped and labelled The Lads.">
+          <div class="wall-fill" id="wallFill"></div>
+          <div class="wall-you" id="wallYou"></div>
+          <div class="wall-lads" id="wallLads"><span>THE LADS</span></div>
+          <div class="wall-pct num" id="wallPct">80%</div>
+        </div>
+        <div class="wall-controls">
+          <div>
+            <label for="howFar">How far did you get? <output id="howFarOut" for="howFar">80%</output></label>
+            <input type="range" id="howFar" min="0" max="100" value="80" step="1">
+            <p class="wall-msg" id="wallMsg" aria-live="polite">Drag it past 80. Go on. We'll wait.</p>
+          </div>
+          <button class="btn yellow" type="button" id="handover">Hand it to the lads</button>
+        </div>
+        <figcaption><b>Fig. 1</b> The 80% wall. Every project you have ever started is somewhere on this line. None of them are on the right.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <div class="tape" aria-hidden="true">
+    <div class="tape-track" id="tape"></div>
+  </div>
+
+  <section class="stats" aria-label="Company figures">
+    <div class="wrap">
+      <div class="stats-grid">
+        <div class="stat"><div class="n num" id="stDropped">4,812</div><div class="l">Projects dropped off</div></div>
+        <div class="stat"><div class="n num" id="stFinished">4,809</div><div class="l">Projects finished</div></div>
+        <div class="stat"><div class="n num" id="inCare">1,284</div><div class="l">Currently in daycare</div></div>
+        <div class="stat"><div class="n num" id="stReclaimed">3</div><div class="l">Owners who took it back (shame)</div></div>
+        <div class="stat"><div class="n num" id="stAvg">14 mo</div><div class="l">Avg. time sat at 80% before drop-off</div></div>
+      </div>
+      <p class="mono muted statsnote" id="statsNote">Example figures until the backend is live.</p>
+    </div>
+  </section>
+
+  <section class="block" id="problem">
+    <div class="wrap">
+      <div class="head">
+        <div>
+          <div class="eyebrow">The problem</div>
+          <h2>You have a coordinator problem. The coordinator is you.</h2>
+        </div>
+        <p class="txt">Half an app. Half a book. Three walls of a shed. A Notion workspace about the shed. A domain for the next thing. <strong>These are all isolated systems. They need a coordinator.</strong> You have been the coordinator for six years. Look at the state of them.</p>
+      </div>
+
+      <figure class="fig" style="margin-top:0">
+        <div class="isolated">
+          <div class="iso">
+            <div class="t">Half an app</div>
+            <div class="s">Auth works. Onboarding works. Billing is a TODO comment from 2023.</div>
+            <div class="pv"><span>PROGRESS</span><span class="num">80%</span></div>
+            <div class="p"><i style="width:80%"></i></div>
+          </div>
+          <div class="iso">
+            <div class="t">Half a book</div>
+            <div class="s">Chapters 1-11 exist. Chapter 12 is a note that says "landing".</div>
+            <div class="pv"><span>PROGRESS</span><span class="num">80%</span></div>
+            <div class="p"><i style="width:80%"></i></div>
+          </div>
+          <div class="iso">
+            <div class="t">The shed</div>
+            <div class="s">Three walls. Roof "next weekend" since March. Which March is disputed.</div>
+            <div class="pv"><span>PROGRESS</span><span class="num">75%</span></div>
+            <div class="p"><i style="width:75%"></i></div>
+          </div>
+          <div class="iso">
+            <div class="t">Notion workspace about the shed</div>
+            <div class="s">Beautiful. Fully linked. Contains a Gantt chart for the roof.</div>
+            <div class="pv"><span>PROGRESS</span><span class="num">100%</span></div>
+            <div class="p"><i style="width:100%"></i></div>
+          </div>
+          <div class="iso">
+            <div class="t">The podcast</div>
+            <div class="s">Logo, intro music, a Riverside subscription. Zero episodes.</div>
+            <div class="pv"><span>PROGRESS</span><span class="num">12%</span></div>
+            <div class="p"><i style="width:12%"></i></div>
+          </div>
+          <div class="iso vacant">
+            <div class="t">Coordinator<br><span class="mono" style="font-size:.76rem;letter-spacing:.08em">(VACANT - IT WAS YOU)</span></div>
+          </div>
+        </div>
+        <figcaption><b>Fig. 2</b> Isolated system of unfinished projects. Note the only thing at 100% is the documentation for a thing that does not exist.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="block" id="how">
+    <div class="wrap">
+      <div class="head">
+        <div>
+          <div class="eyebrow">How it works</div>
+          <h2>Drop-off. Handover. Done. You are not involved in step three.</h2>
+        </div>
+        <p class="txt">Same as any daycare. You bring it in. You sign the form. You leave. You do not stand at the window.</p>
+      </div>
+      <ol class="steps">
+        <li class="step">
+          <div class="k">STEP 1</div>
+          <h3>Drop-off</h3>
+          <p>Bring the repo, the manuscript, the Figma, the shed. Anything with a start and no end.</p>
+          <div class="hrs">Mon-Sat 07:00-19:00</div>
+        </li>
+        <li class="step">
+          <div class="k">STEP 2</div>
+          <h3>Assessment</h3>
+          <p>We measure the 80%. If it's 79%, go home and do one more thing. We have a ruler.</p>
+          <div class="hrs">Takes 20 min</div>
+        </li>
+        <li class="step">
+          <div class="k">STEP 3</div>
+          <h3>Handover</h3>
+          <p>Your access is revoked. Your notifications are muted. This is for your own good.</p>
+          <div class="hrs">Irreversible</div>
+        </li>
+        <li class="step">
+          <div class="k">STEP 4</div>
+          <h3>The Boring Twenty</h3>
+          <p>The lads do the docs, the edge cases, the deploy, the roof. The bit you've avoided for 14 months.</p>
+          <div class="hrs">No tinkering</div>
+        </li>
+        <li class="step">
+          <div class="k">STEP 5</div>
+          <h3>Done</h3>
+          <p>It ships. You are told afterwards. We take a cut of the whole thing.</p>
+          <div class="hrs">Invoice attached</div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="block" id="lads">
+    <div class="wrap">
+      <div class="head">
+        <div>
+          <div class="eyebrow">The Lads</div>
+          <h2>Lads who mean business and hate tinkering.</h2>
+        </div>
+        <p class="txt">No one on this team has ever "just had a quick look at the settings". No one has ever renamed a variable for vibes. <strong>Not one of them has a side project.</strong> They finish. That's the whole personality.</p>
+      </div>
+      <div class="lads">
+        <article class="lad">
+          <div class="face"><canvas data-seed="7"></canvas><span>DK</span></div>
+          <div class="body">
+            <h3>Deco</h3>
+            <div class="role">Head of Not Tinkering</div>
+            <p>Has never opened a settings menu. Ships what's there. Once told a client "the font is fine" and hung up.</p>
+            <span class="tag">Finished: 1,104</span>
+          </div>
+        </article>
+        <article class="lad">
+          <div class="face"><canvas data-seed="19"></canvas><span>BT</span></div>
+          <div class="body">
+            <h3>Big Tony</h3>
+            <div class="role">Chief Finishing Officer</div>
+            <p>Completed a jigsaw with a piece missing. Called it done. It was done. Handles handovers personally.</p>
+            <span class="tag">Finished: 1,377</span>
+          </div>
+        </article>
+        <article class="lad">
+          <div class="face"><canvas data-seed="42"></canvas><span>MK</span></div>
+          <div class="body">
+            <h3>Marek</h3>
+            <div class="role">VP, The Boring Twenty</div>
+            <p>Writes the docs. Does the tests. Names the variables. Does not want to hear about your "vision" for v2.</p>
+            <span class="tag">Finished: 1,290</span>
+          </div>
+        </article>
+        <article class="lad">
+          <div class="face"><canvas data-seed="88"></canvas><span>SH</span></div>
+          <div class="body">
+            <h3>Sharon</h3>
+            <div class="role">Head of the Cut</div>
+            <p>Takes the cut. Sends the invoice. Does not reply to your email. Has never replied to an email.</p>
+            <span class="tag">Finished: 1,038</span>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="dropoff">
+    <div class="wrap">
+      <div class="head">
+        <div>
+          <div class="eyebrow">Drop-off</div>
+          <h2>Drop off a project.</h2>
+        </div>
+        <p class="txt">Fill this in honestly. We can tell. Your receipt appears on the right. Keep it. You will not need it. There is no pickup.</p>
+      </div>
+      <div class="dropoff">
+        <form class="form" id="dropForm" novalidate>
+          <div class="field">
+            <label for="pname">Project name <small>(the current name, not the one you're thinking of changing it to)</small></label>
+            <input type="text" id="pname" value="Shed (v3)" autocomplete="off">
+          </div>
+          <div class="two">
+            <div class="field">
+              <label for="ptype">What is it</label>
+              <select id="ptype">
+                <option value="app">App</option>
+                <option value="saas">SaaS (has a landing page)</option>
+                <option value="novel">Novel</option>
+                <option value="podcast">Podcast</option>
+                <option value="shed" selected>Shed</option>
+                <option value="board_game">Board game</option>
+                <option value="napkin">Business idea (napkin)</option>
+                <option value="home_gym">Home gym</option>
+                <option value="second_brain">Second brain</option>
+                <option value="other">Other, it’s hard to explain</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="psince">Sitting there since</label>
+              <select id="psince">
+                <option value="weeks">A few weeks</option>
+                <option value="months">A few months</option>
+                <option value="lastyear" selected>Last year</option>
+                <option value="y2019">2019</option>
+                <option value="anniversary">It has its own anniversary</option>
+              </select>
+            </div>
+          </div>
+          <div class="field">
+            <label for="ppct">How far did you get? <output id="ppctOut" for="ppct" class="mono">80%</output></label>
+            <input type="range" id="ppct" min="0" max="100" value="80" step="1">
+            <div class="hint" id="ppctHint">80% is the minimum. 80% is also the maximum. Interesting.</div>
+          </div>
+          <div class="field">
+            <label for="pwhy">What distracted you</label>
+            <select id="pwhy">
+              <option>A better version of this project</option>
+              <option>A completely different project</option>
+              <option selected>Researching tools for this project</option>
+              <option>Made a logo instead</option>
+              <option>Bought a domain for a new idea</option>
+              <option>Read a book about finishing things</option>
+              <option>Sorry, what?</option>
+            </select>
+          </div>
+          <label class="consent">
+            <input type="checkbox" id="pwaiver" checked>
+            <span>I have read the <button type="button" data-open-waiver>waiver</button> and understand that I will not be allowed to touch it, look at it, or "just suggest one thing".</span>
+          </label>
+          <div class="row">
+            <button class="btn" type="submit" id="dropBtn">Drop it off</button>
+            <span class="mono muted" id="backendNote" hidden>Backend not live yet: prints an example receipt.</span>
+          </div>
+        </form>
+
+        <div class="receipt-wrap">
+          <div class="receipt" id="receipt" aria-live="polite">
+            <div class="rt">DROP-OFF RECEIPT</div>
+            <div class="rs" id="rNo">No. 80-4812 · Previous drop-off</div>
+            <dl>
+              <dt>Project</dt><dd id="rName">Kombucha SaaS</dd>
+              <dt>Type</dt><dd id="rType">SaaS (has a landing page)</dd>
+              <dt>Received at</dt><dd id="rPct" class="num">80%</dd>
+              <dt>Sitting since</dt><dd id="rSince">7 years at 80%</dd>
+              <dt>Distraction on file</dt><dd id="rWhy">Bought a domain for a new idea</dd>
+              <dt>Assigned lad</dt><dd id="rLad">Whoever claims it. Not you.</dd>
+              <dt>Our cut</dt><dd id="rCut">30% of the whole thing</dd>
+              <dt>Pickup time</dt><dd>Never</dd>
+            </dl>
+            <div class="stamp" id="rStamp">NOT YOUR PROBLEM ANY MORE</div>
+            <div class="foot" id="rFoot">Retain for your records. We won't be in touch. Sharon has your email. She will not use it.</div>
+          </div>
+          <p class="receipt-note">Example receipt. Sign in and the real one prints here.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="cut">
+    <div class="wrap">
+      <div class="head">
+        <div>
+          <div class="eyebrow">The Cut</div>
+          <h2>Simple pricing. We take a cut of the whole thing.</h2>
+        </div>
+        <p class="txt">No monthly fee. No seats. No "contact sales". When it's finished and it makes money, we get some of it. If it's a shed, we get a shed's worth.</p>
+      </div>
+      <div class="tiers">
+        <div class="tier">
+          <h3>Weekend Warrior</h3>
+          <div class="cut num">20%<small>of the whole thing</small></div>
+          <p class="who">One project. Probably the app. You know the one.</p>
+          <ul>
+            <li>One (1) project in daycare</li>
+            <li>One (1) ignored email from you</li>
+            <li>Access revoked at handover</li>
+            <li class="x">Progress updates</li>
+            <li class="x">"Quick look"</li>
+          </ul>
+          <a class="btn ghost" href="#dropoff">Drop one off</a>
+        </div>
+        <div class="tier pop">
+          <span class="badge">Most dropped-off</span>
+          <h3>Serial Starter</h3>
+          <div class="cut num">30%<small>of the whole thing</small></div>
+          <p class="who">Up to five projects a month. We have met you before.</p>
+          <ul>
+            <li>Up to 5 projects in daycare</li>
+            <li>GitHub notifications turned off for you</li>
+            <li>Priority shed handling</li>
+            <li>Big Tony rings your mother if you tinker</li>
+            <li class="x">Progress updates</li>
+          </ul>
+          <a class="btn" href="#dropoff">Drop five off</a>
+        </div>
+        <div class="tier">
+          <h3>Founder Mode</h3>
+          <div class="cut num">40%<small>of the whole thing + admin password</small></div>
+          <p class="who">Unlimited. You have a domain for every idea and a product for none of them.</p>
+          <ul>
+            <li>Unlimited projects in daycare</li>
+            <li>A lad who sits beside you</li>
+            <li>Domain purchases blocked at the bank</li>
+            <li>Your Notion is archived for your safety</li>
+            <li class="x">Progress updates</li>
+          </ul>
+          <a class="btn ghost" href="#dropoff">Drop everything off</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="love">
+    <div class="wrap">
+      <div class="head">
+        <div>
+          <div class="eyebrow">What people say</div>
+          <h2>Everyone needs the lads. Nobody wants to admit it.</h2>
+        </div>
+        <p class="txt">Unedited. The lads don't edit things. That's your problem.</p>
+      </div>
+      <div class="quotes">
+        <div class="quote">
+          <p>"Got my app to 80% in a weekend, then spent eleven months choosing a font. They shipped it on a Tuesday with Arial. It has 4,000 users."</p>
+          <div class="who"><b>Ciarán</b> · "Founder"</div>
+        </div>
+        <div class="quote">
+          <p>"They wouldn't let me see it until it was published. It's the best thing I've ever made. I don't recognise chapter 12."</p>
+          <div class="who"><b>Aoife</b> · Author of a finished book</div>
+        </div>
+        <div class="quote">
+          <p>"I dropped off a shed. I have a shed now."</p>
+          <div class="who"><b>Gerry</b> · Shed owner</div>
+        </div>
+        <div class="quote">
+          <p>"Tried to submit a 'small tweak' during handover. Big Tony rang my mother. She agreed with him."</p>
+          <div class="who"><b>Dave</b> · Recovering tinkerer</div>
+        </div>
+        <div class="quote">
+          <p>"They finished my podcast. It's one episode. It's done. It's out. That's more than you've done."</p>
+          <div class="who"><b>Niamh</b> · Podcaster (1 ep.)</div>
+        </div>
+        <div class="quote">
+          <p>"Asked if I could pick it up early. Sharon said 'no' and it was the most respected I've ever felt."</p>
+          <div class="who"><b>Scarf</b> · Idea guy</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="faq">
+    <div class="wrap">
+      <div class="head">
+        <div>
+          <div class="eyebrow">Questions</div>
+          <h2>Things you're about to ask.</h2>
+        </div>
+        <p class="txt">We know. We've heard them. Read these before you email Sharon. Sharon will not read your email.</p>
+      </div>
+      <div class="faq">
+        <details><summary>Can I check on it?</summary><div class="a">No.</div></details>
+        <details><summary>I've had a great idea for it since drop-off.</summary><div class="a">Write it down. Start a new project. Drop that off in fourteen months. <b>The lads are finishing the one you had, not the one you have now.</b></div></details>
+        <details><summary>What if it's only 79% done?</summary><div class="a">Come back at 80. We have a ruler. We are not a place for starting things. Starting is the one thing you don't need help with.</div></details>
+        <details><summary>What counts as "finished"?</summary><div class="a">Shipped, published, standing, or in a customer's hands. <b>Not</b> "basically done", "just needs polish", "done apart from the roof", or "I could ship it tomorrow if I wanted".</div></details>
+        <details><summary>What's in the cut?</summary><div class="a">A cut. Of the whole thing. If it's a business, a share. If it's a book, royalties. If it's a shed, we keep the good shelf.</div></details>
+        <details><summary>Do you use AI?</summary><div class="a">Yes. Also lads. The lads are the AI. Please don't ask which is which. Deco gets upset.</div></details>
+        <details><summary>Do you refactor?</summary><div class="a">[Long silence.] No.</div></details>
+        <details><summary>Will you rebrand it?</summary><div class="a">We will ship it under the name it has. The name is fine. It was always fine. The name was never the problem.</div></details>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="writing">
+    <div class="wrap">
+      <div class="head">
+        <div>
+          <div class="eyebrow">Writing</div>
+          <h2>Notes from the drop-off window.</h2>
+        </div>
+        <p class="txt">Short pieces. You'll stop reading at 80% of each one. We've planned for that.</p>
+      </div>
+      <div class="posts">
+        <a class="post" href="#writing">
+          <div class="d">02 Sep 2026</div>
+          <div><h3>The Sacred Twenty</h3><p>Why the last 20% is 80% of the work and 100% of the reason you stopped.</p></div>
+          <div class="r">4 min · you'll do 3</div>
+        </a>
+        <a class="post" href="#writing">
+          <div class="d">21 Aug 2026</div>
+          <div><h3>Your fourth rewrite is not a feature</h3><p>A field note on "I'll just clean this up first", with a case study that took two years.</p></div>
+          <div class="r">3 min · you'll do 2</div>
+        </a>
+        <a class="post" href="#writing">
+          <div class="d">09 Aug 2026</div>
+          <div><h3>On sheds</h3><p>Every unfinished project is a shed. Some sheds are apps. Gerry's was a shed.</p></div>
+          <div class="r">2 min · you'll do 1</div>
+        </a>
+        <a class="post" href="#writing">
+          <div class="d">30 Jul 2026</div>
+          <div><h3>Everyone needs the lads. Not everyone has them.</h3><p>Our founding memo, written in one sitting, published the same day, never edited. Practise what you preach.</p></div>
+          <div class="r">5 min · you'll do 4</div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="closing" id="careers">
+    <div class="wrap">
+      <h2>Now hiring lads.<br><em>Must hate tinkering.</em></h2>
+      <p>No portfolio. No side projects. If you've ever said "let me just refactor this real quick", the interview is over. If you've finished a jigsaw with a piece missing, start Monday.</p>
+      <div class="actions">
+        <a class="btn" href="#dropoff">Drop off a project</a>
+        <a class="btn ghost" href="#lads">Meet the lads</a>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<section class="block view" data-view="daycare" hidden>
+  <div class="wrap">
+    <div class="head">
+      <div>
+        <div class="eyebrow">Daycare</div>
+        <h2>Projects sat at 80%, waiting for a lad.</h2>
+      </div>
+      <p class="txt">Every one of these was "basically done" when it arrived. Claim one, finish it, post the proof. <strong>Nope</strong> anything that isn’t really 80%.</p>
+    </div>
+    <div class="cards" id="daycareList"></div>
+    <div class="head" style="margin-top:5rem">
+      <div>
+        <div class="eyebrow">The Wall of Done</div>
+        <h2>Finished. By someone else.</h2>
+      </div>
+      <p class="txt">Proof attached. Owners were told afterwards.</p>
+    </div>
+    <div class="cards" id="doneList"></div>
+  </div>
+</section>
+
+<section class="block view" data-view="boards" hidden>
+  <div class="wrap">
+    <div class="head">
+      <div>
+        <div class="eyebrow">The Boards</div>
+        <h2>Two leaderboards. You want to be on one of them.</h2>
+      </div>
+      <p class="txt"><strong>The Bastards</strong>: drop-offs, days at 80%, take-backs and nopes. Higher is worse. <strong>The Lads</strong>: finishes. Giving a claim back costs 20. Lads don’t give things back.</p>
+    </div>
+    <div class="boards">
+      <div>
+        <h3 class="boardtitle">The Bastards</h3>
+        <div id="boardBastards"></div>
+      </div>
+      <div>
+        <h3 class="boardtitle">The Lads</h3>
+        <div id="boardLads"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="block view" data-view="me" hidden>
+  <div class="wrap">
+    <div class="head">
+      <div>
+        <div class="eyebrow">Your file</div>
+        <h2>Your drop-offs and your claims.</h2>
+      </div>
+      <p class="txt">Both lists should be short. One of them isn’t.</p>
+    </div>
+    <form class="profile" id="profileForm" hidden>
+      <div class="field"><label for="pfHandle">Handle</label><input type="text" id="pfHandle" maxlength="24" autocomplete="off" pattern="[a-z0-9_]{2,24}"></div>
+      <div class="field"><label for="pfName">Name on the boards</label><input type="text" id="pfName" maxlength="40" autocomplete="off"></div>
+      <div class="row"><button class="btn small" type="submit">Save</button><button class="btn ghost small" type="button" data-signout>Sign out</button></div>
+    </form>
+    <h3 class="boardtitle">Dropped off</h3>
+    <div class="cards" id="mineList"></div>
+    <h3 class="boardtitle" style="margin-top:3rem">Claimed by you</h3>
+    <div class="cards" id="claimsList"></div>
+    <p class="mono muted" style="margin-top:3rem;font-size:.76rem">Want your account and projects gone? Tell Maz. He’ll delete it at 80% and forget the rest.</p>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="fgrid">
+      <div class="col">
+        <a class="wordmark" href="#top">80%<b>/</b>100%.ai</a>
+        <p class="about">The Eighty Percent / One Hundred Percent Company. A daycare for projects. Drop-off Mon-Sat 07:00-19:00. No pickup.</p>
+      </div>
+      <div class="col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="#problem">About</a></li>
+          <li><a href="#writing">Writing</a></li>
+          <li><a href="#careers">Careers</a></li>
+          <li><a href="#lads">The Lads</a></li>
+        </ul>
+      </div>
+      <div class="col">
+        <h4>Product</h4>
+        <ul>
+          <li><a href="#how">How it works</a></li>
+          <li><a href="#cut">The Cut</a></li>
+          <li><a href="#faq">Questions</a></li>
+          <li><button type="button" data-open-waiver style="background:none;border:0;padding:0;font:inherit;color:inherit;cursor:pointer;text-decoration:none">The waiver</button></li>
+        </ul>
+      </div>
+      <div class="col">
+        <h4>Not available</h4>
+        <ul>
+          <li>Status page</li>
+          <li>Progress updates</li>
+          <li>Refunds</li>
+          <li>Sharon</li>
+        </ul>
+      </div>
+    </div>
+    <div class="legal">
+      <span>© 2026 80%/100%.ai · Finish a project you ADHD bastard.</span>
+      <span>Not affiliated with your therapist. Idea: Scarf, in a group chat, edited 2m ago.</span>
+    </div>
+  </div>
+</footer>
+
+<dialog id="waiver">
+  <div class="waiver">
+    <div class="eyebrow">Form 80/100-A · Handover waiver</div>
+    <h3>I, the undersigned, acknowledge that:</h3>
+    <ol>
+      <li>I will not touch it.</li>
+      <li>I will not "just have a look".</li>
+      <li>I will not suggest a rebrand, a rename, a new font, or a "cleaner" architecture.</li>
+      <li>"One small thing" is not small. It has never once been small.</li>
+      <li>The lads' decision is final. Sharon's decision is more final than that.</li>
+      <li>If I start a new project during daycare, I will bring it here in fourteen months like everyone else.</li>
+      <li>A cut of the whole thing means a cut of the whole thing.</li>
+    </ol>
+    <div class="sig">Signed: ________________ &nbsp; Witnessed by: Big Tony &nbsp; Date: whenever you finally got round to it</div>
+    <div class="row">
+      <button class="btn ghost" type="button" data-close-waiver>Not ready</button>
+      <button class="btn" type="button" data-close-waiver>Fine. I agree.</button>
+    </div>
+  </div>
+</dialog>
+<dialog id="authDlg">
+  <div class="waiver">
+    <div class="eyebrow">Sign in</div>
+    <h3>We need to know who to bill.</h3>
+    <p class="muted" style="margin-top:.6rem">One click. No password. We don’t want your password, we want your projects.</p>
+    <div class="oauth">
+      <button class="btn" type="button" data-oauth="google">Continue with Google</button>
+      <button class="btn" type="button" data-oauth="github">Continue with GitHub</button>
+    </div>
+    <form id="magicForm" class="magic">
+      <label for="magicEmail" class="mono muted">Or get a link by email</label>
+      <div class="row">
+        <input type="email" id="magicEmail" placeholder="you@example.com" autocomplete="email" required>
+        <button class="btn ghost" type="submit" id="magicBtn">Send link</button>
+      </div>
+      <p class="mono muted" id="magicSent" hidden></p>
+    </form>
+    <div class="row" style="justify-content:flex-end;margin-top:1.2rem"><button class="btn ghost small" type="button" data-close-auth>Not now</button></div>
+    <p class="mono muted" style="margin-top:1rem;font-size:.72rem">Signing in shows your handle, name and avatar on public boards. That’s the point.</p>
+  </div>
+</dialog>
+
+<script src="config.js"></script>
+<script src="vendor/supabase-2.115.0.min.js" integrity="sha384-EyR2P0dlmjnEGcm9xcjdAn0VedZpRHEwDLP9oSS6wYMvzHBHkUrvgonveazJ/sSx"></script>
+<script src="app.js"></script>
+</body>
+</html>

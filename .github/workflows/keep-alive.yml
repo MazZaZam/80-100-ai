@@ -1,0 +1,50 @@
+# Daily keep-alive for the Free-plan Supabase project, plus a public-data backup and a heartbeat commit.
+# - Real database query via PostgREST every day (Supabase pauses Free projects with too little DB activity in a week).
+# - Exports the four public-read tables to backup/*.json and commits when they change.
+# - If main has had no commit for 30 days, commits a heartbeat so GitHub does not disable this schedule (60-day rule).
+# No secrets: the publishable key and project URL are public by design (same values as config.js).
+name: keep-alive
+on:
+  schedule:
+    - cron: '17 4 * * *'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: keep-alive
+  cancel-in-progress: false
+env:
+  SUPABASE_URL: https://SUPABASE_REF.supabase.co
+  SUPABASE_KEY: SUPABASE_PUBLISHABLE_KEY
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 1
+      - name: Database ping
+        run: |
+          curl -fsS "$SUPABASE_URL/rest/v1/stats?select=dropped_off" -H "apikey: $SUPABASE_KEY" -o /dev/null
+      - name: Export public tables
+        run: |
+          mkdir -p backup
+          for t in profiles projects nopes releases; do
+            curl -fsS "$SUPABASE_URL/rest/v1/$t?select=*&order=created_at.asc" -H "apikey: $SUPABASE_KEY" \
+              | python3 -c 'import json,sys; json.dump(json.load(sys.stdin), sys.stdout, indent=1, sort_keys=True)' > "backup/$t.json"
+          done
+      - name: Commit backup or heartbeat
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add backup
+          if ! git diff --cached --quiet; then
+            git commit -m "backup: $(date -u +%F)" && git push
+            exit 0
+          fi
+          last=$(git log -1 --format=%ct)
+          if [ $(( $(date +%s) - last )) -gt $((30*86400)) ]; then
+            date -u +%FT%TZ > .github/keepalive
+            git add .github/keepalive
+            git commit -m "keepalive: $(date -u +%F)" && git push
+          fi

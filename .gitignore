@@ -1,0 +1,9 @@
+.DS_Store
+*.local
+.env
+.env.*
+secrets*
+*.bak.*
+node_modules/
+supabase/.temp/
+supabase/.branches/
