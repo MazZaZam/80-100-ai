@@ -218,8 +218,11 @@
   @media (max-width: 520px) { .stats-grid { grid-template-columns: 1fr; } }
   .stat .n {
     font-family: var(--display); font-weight: 900; font-stretch: 112%;
-    font-size: clamp(2.2rem, 4vw, 3.4rem); letter-spacing: -.03em; line-height: 1; color: var(--yellow);
+    font-size: clamp(2.2rem, 4vw, 3.4rem); letter-spacing: -.03em; line-height: 1; color: var(--yellow); white-space: nowrap;
   }
+  .stat .n small { font-size: .42em; font-weight: 700; margin-left: .15em; letter-spacing: 0; }
+  .stat .l { white-space: nowrap; }
+  @media (max-width: 1240px) { .stat .l { white-space: normal; } }
   .stat .l { margin-top: .5rem; font-family: var(--mono); font-size: .76rem; letter-spacing: .08em; text-transform: uppercase; color: var(--inv-muted); }
 
   /* Sections */
@@ -427,6 +430,10 @@
   @media (max-width: 1000px) { .cards { grid-template-columns: repeat(2, 1fr); } }
   @media (max-width: 600px) { .cards { grid-template-columns: 1fr; } }
   .pcard { border: 1px solid var(--line); border-radius: 6px; padding: 1.1rem 1.2rem 1.2rem; display: flex; flex-direction: column; gap: .7rem; background: var(--bg); }
+  @supports (grid-template-rows: subgrid) {
+    .pcard { display: grid; grid-template-rows: subgrid; grid-row: span 8; align-content: start; }
+  }
+  .pcard > :empty { margin: 0; }
   .pcard.status-finished { border-color: var(--done); }
   .pcard.status-reclaimed { opacity: .7; }
   .phead { display: flex; justify-content: space-between; gap: .8rem; align-items: center; font-size: .82rem; }
@@ -447,9 +454,11 @@
   .chip.nope { border-color: var(--line); color: var(--ink-2); }
   .chip.soon { margin-left: .5rem; border-color: var(--line); color: var(--ink-2); font-size: .6rem; padding: .15rem .4rem; vertical-align: middle; }
   .proof { font-size: .9rem; overflow-wrap: anywhere; }
+  .proof:empty { display: none; }
   .proof a { text-decoration-color: var(--yellow); text-decoration-thickness: 2px; }
-  .pactions { display: flex; gap: .5rem; flex-wrap: wrap; margin-top: auto; padding-top: .4rem; }
-  .finishform { display: grid; gap: .5rem; border-top: 1px dashed var(--line); padding-top: .8rem; }
+  .pactions { display: flex; gap: .5rem; flex-wrap: wrap; align-self: end; padding-top: .4rem; }
+  .pactions:empty { padding: 0; }
+  .finishform { display: grid; gap: .5rem; border-top: 1px dashed var(--line); padding-top: .8rem; flex-basis: 100%; }
   .finishform label { font-size: .85rem; font-weight: 600; }
   .finishform input { width: 100%; padding: .6rem .7rem; font: 500 .95rem var(--body); color: var(--ink); background: var(--bg); border: 1.5px solid var(--line); border-radius: 4px; }
   .boards { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
@@ -535,8 +544,8 @@
         <div class="stat"><div class="n num" id="stDropped">4,812</div><div class="l">Projects dropped off</div></div>
         <div class="stat"><div class="n num" id="stFinished">4,809</div><div class="l">Projects finished</div></div>
         <div class="stat"><div class="n num" id="inCare">1,284</div><div class="l">Currently in daycare</div></div>
-        <div class="stat"><div class="n num" id="stReclaimed">3</div><div class="l">Owners who took it back (shame)</div></div>
-        <div class="stat"><div class="n num" id="stAvg">14 mo</div><div class="l">Avg. time sat at 80% before drop-off</div></div>
+        <div class="stat"><div class="n num" id="stReclaimed">3</div><div class="l">Taken back (shame)</div></div>
+        <div class="stat"><div class="n num"><span id="stAvg">14</span><small>mo</small></div><div class="l">Avg. time sat at 80%</div></div>
       </div>
       <p class="mono muted statsnote" id="statsNote">Sample figures. Real ones take over when sign-in goes live.</p>
     </div>

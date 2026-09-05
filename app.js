@@ -394,7 +394,7 @@
     api.stats().then(function (d) {
       if (!d) return;
       setText('#stDropped', fmtInt(d.dropped_off)); setText('#stFinished', fmtInt(d.finished)); setText('#inCare', fmtInt(d.in_daycare));
-      setText('#stReclaimed', fmtInt(d.reclaimed)); setText('#stAvg', (d.avg_months_at_80 || 0) + ' mo');
+      setText('#stReclaimed', fmtInt(d.reclaimed)); setText('#stAvg', String(d.avg_months_at_80 || 0));
       var note = $('#statsNote');
       if (note) note.textContent = api.live ? (Number(d.dropped_off) === 0 ? 'Live figures. Nobody has dropped anything off yet. Be the first bastard.' : 'Live figures.') : 'Sample figures. Real ones take over when sign-in goes live.';
     }).catch(function () {});
@@ -498,13 +498,12 @@
     var chips = el('div', { class: 'pchips' }, [chip]);
     if (nopeCount) chips.appendChild(el('span', { class: 'chip nope', text: nopeCount + (nopeCount === 1 ? ' NOPE' : ' NOPES') }));
     c.appendChild(chips);
+    var proof = el('p', { class: 'proof' });
     if (p.status === 'finished' && p.proof_url) {
-      c.appendChild(el('p', { class: 'proof' }, [
-        el('a', { href: p.proof_url, rel: 'noopener noreferrer nofollow ugc', target: '_blank', text: 'Proof of finish' }),
-        p.note ? el('span', { class: 'muted', text: ' - ' }) : null,
-        p.note ? el('span', { text: p.note }) : null
-      ]));
+      proof.appendChild(el('a', { href: p.proof_url, rel: 'noopener noreferrer nofollow ugc', target: '_blank', text: 'Proof of finish' }));
+      if (p.note) { proof.appendChild(el('span', { class: 'muted', text: ' - ' })); proof.appendChild(el('span', { text: p.note })); }
     }
+    c.appendChild(proof);
     var actions = el('div', { class: 'pactions' });
     if (p.status === 'daycare') {
       if (!isOwner) actions.appendChild(el('button', { type: 'button', class: 'btn yellow small', text: 'I’ll finish it', onclick: function () { act('claim_project', p.id, 'Claimed. It’s yours now. Don’t tinker.'); } }));
@@ -522,7 +521,7 @@
       var noped = !!myNopes[p.id];
       actions.appendChild(el('button', { type: 'button', class: 'btn ghost small' + (noped ? ' on' : ''), text: noped ? 'Un-nope' : 'Nope, that’s not 80%', onclick: function () { toggleNope(p.id, noped); } }));
     }
-    if (actions.childNodes.length) c.appendChild(actions);
+    c.appendChild(actions);
     return c;
   }
   function refreshView() { loadMe().then(function () { renderNav(); route(); loadStats(); }); }
@@ -555,7 +554,7 @@
         .then(function () { toast('Finished. Invoice sent. 100 points. Go and start something else.'); refreshView(); })
         .catch(function (err) { toast(errText(err), 3800); });
     });
-    cardNode.appendChild(f);
+    cardNode.querySelector('.pactions').appendChild(f);
   }
 
   /* ================= drop-off form ================= */
