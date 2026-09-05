@@ -194,7 +194,7 @@
     if (r === 'home') {
       var id = location.hash.replace(/^#\/?/, '');
       var target = id ? document.getElementById(id) : null;
-      if (target) target.scrollIntoView({ block: 'start' });
+      if (target) target.scrollIntoView({ block: 'start', behavior: 'instant' });
       else if (!id) window.scrollTo({ top: 0, behavior: 'instant' });
     } else window.scrollTo({ top: 0, behavior: 'instant' });
     if (r === 'daycare') loadDaycare();
